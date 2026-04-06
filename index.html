@@ -1,1 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NH Creations â Financial Command Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-500: #64748b;
+            --slate-400: #94a3b8;
+            --slate-300: #cbd5e1;
+            --slate-100: #f1f5f9;
+            --emerald-400: #34d399;
+            --red-400: #f87171;
+            --amber-400: #fbbf24;
+            --blue-400: #60a5fa;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--slate-900);
+            color: var(--slate-100);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .pulse-glow {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Card styles */
+        .card {
+            background-color: var(--slate-800);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(148, 163, 184, 0.2);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--slate-800) 0%, rgba(30, 41, 59, 0.8) 100%);
+            border-bottom: 2px solid var(--emerald-400);
+            padding: 30px 40px;
+            margin-bottom: 30px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand-name {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--slate-100);
+        }
+
+        .brand-accent {
+            display: block;
+            width: 3px;
+            height: 28px;
+            background-color: var(--emerald-400);
+            border-radius: 2px;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            color: var(--slate-400);
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+        }
+
+        .header-meta {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .live-clock {
+            font-size: 16px;
+            color: var(--slate-300);
+            font-weight: 500;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+
+        .controller-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--slate-300);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--emerald-400);
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* KPI Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 0 40px;
+        }
+
+        .kpi-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(20, 29, 44, 0.8) 100%);
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(148, 163, 184, 0.25);
+            background: linear-gradient(135deg, rgba(30, 41, 59, 1) 0%, rgba(20, 29, 44, 0.9) 100%);
+        }
+
+        .kpi-label {
+            font-size: 12px;
+            color: var(--slate-400);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .kpi-accent {
+            height: 3px;
+            border-radius: 2px;
+            margin-top: 12px;
+        }
+
+        .accent-emerald {
+            background-color: var(--emerald-400);
+        }
+
+        .accent-red {
+            background-color: var(--red-400);
+        }
+
+        .accent-amber {
+            background-color: var(--amber-400);
+        }
+
+        .accent-blue {
+            background-color: var(--blue-400);
+        }
+
+        /* Main content */
+        .content {
+            padding: 0 40px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .row {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .row-2col {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .row-fullwidth {
+            grid-template-columns: 1fr;
+        }
+
+        @media (max-width: 1024px) {
+            .row-2col {
+                grid-template-columns: 1fr;
+            }
+            .kpi-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px;
+            }
+            .content, .kpi-grid {
+                padding: 0 20px;
+            }
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Aging Analysis */
+        .aging-container {
+            margin-top: 20px;
+        }
+
+        .aging-bucket {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .aging-label {
+            min-width: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--slate-300);
+        }
+
+        .aging-bar {
+            flex: 1;
+            height: 24px;
+            background-color: rgba(148, 163, 184, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .aging-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            transition: width 0.3s ease;
+        }
+
+        .bar-0-30 { background: linear-gradient(90deg, #10b981, #34d399); }
+        .bar-31-60 { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .bar-61-90 { background: linear-gradient(90deg, #ef4444, #f87171); }
+        .bar-90plus { background: linear-gradient(90deg, #7f1d1d, #991b1b); }
+
+        .aging-amount {
+            min-width: 120px;
+            text-align: right;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--slate-100);
+        }
+
+        /* Comparison Gauges */
+        .gauge-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .gauge {
+            text-align: center;
+        }
+
+        .gauge-label {
+            font-size: 12px;
+            color: var(--slate-400);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .gauge-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .gauge-bar {
+            width: 80px;
+            height: 40px;
+            background-color: rgba(148, 163, 184, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .gauge-fill {
+            height: 100%;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            transition: width 0.3s ease;
+        }
+
+        /* Table Styles */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .data-table thead {
+            background-color: rgba(148, 163, 184, 0.05);
+            border-bottom: 2px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .data-table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--slate-300);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 11px;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+            color: var(--slate-300);
+        }
+
+        .data-table tbody tr:hover {
+            background-color: rgba(148, 163, 184, 0.05);
+        }
+
+        .data-table tbody tr:nth-child(even) {
+            background-color: rgba(148, 163, 184, 0.03);
+        }
+
+        .amount-cell {
+            text-align: right;
+            font-weight: 600;
+            color: var(--slate-100);
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+
+        .center-cell {
+            text-align: center;
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-current {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--emerald-400);
+        }
+
+        .badge-warning {
+            background-color: rgba(245, 158, 11, 0.2);
+            color: var(--amber-400);
+        }
+
+        .badge-overdue {
+            background-color: rgba(248, 113, 113, 0.2);
+            color: var(--red-400);
+        }
+
+        .badge-critical {
+            background-color: rgba(127, 29, 29, 0.3);
+            color: #fca5a5;
+        }
+
+        .badge-active {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--emerald-400);
+        }
+
+        /* Email Activity Feed */
+        .activity-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            border-left: 3px solid rgba(148, 163, 184, 0.2);
+            background-color: rgba(148, 163, 184, 0.02);
+            border-radius: 4px;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .activity-item:hover {
+            background-color: rgba(148, 163, 184, 0.05);
+            border-left-color: rgba(148, 163, 184, 0.4);
+        }
+
+        .activity-item.new {
+            border-left-color: var(--blue-400);
+            background-color: rgba(96, 165, 250, 0.08);
+        }
+
+        .activity-item.overdue {
+            border-left-color: var(--red-400);
+            background-color: rgba(248, 113, 113, 0.08);
+        }
+
+        .activity-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--blue-400);
+            border-radius: 50%;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+
+        .activity-item.overdue .activity-dot {
+            background-color: var(--red-400);
+            animation: pulse 2s infinite;
+        }
+
+        .activity-content {
+            flex: 1;
+            font-size: 12px;
+        }
+
+        .activity-sender {
+            font-weight: 600;
+            color: var(--slate-100);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .activity-subject {
+            color: var(--slate-400);
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .activity-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .activity-amount {
+            font-weight: 600;
+            color: var(--slate-300);
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+
+        /* Alerts */
+        .alert-card {
+            background: linear-gradient(135deg, rgba(127, 29, 29, 0.2) 0%, rgba(153, 27, 27, 0.15) 100%);
+            border-left: 4px solid var(--red-400);
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            color: #fca5a5;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .alert-detail {
+            color: var(--slate-400);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        /* Automation Grid */
+        .automation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .automation-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(20, 29, 44, 0.8) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .automation-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(16, 185, 129, 0.4);
+            background: linear-gradient(135deg, rgba(30, 41, 59, 1) 0%, rgba(20, 29, 44, 0.9) 100%);
+        }
+
+        .automation-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .automation-name {
+            font-weight: 600;
+            color: var(--slate-100);
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .automation-schedule {
+            font-size: 11px;
+            color: var(--slate-400);
+            margin-bottom: 10px;
+        }
+
+        .automation-next {
+            font-size: 11px;
+            color: var(--blue-400);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .automation-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 11px;
+        }
+
+        .auto-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--emerald-400);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* Timeline */
+        .timeline {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: rgba(148, 163, 184, 0.05);
+            border-radius: 6px;
+        }
+
+        .timeline-label {
+            font-size: 11px;
+            color: var(--slate-400);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .timeline-bar {
+            height: 50px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(96, 165, 250, 0.1) 10%,
+                rgba(96, 165, 250, 0.1) 90%,
+                transparent 100%);
+            border-radius: 4px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .timeline-tick {
+            position: absolute;
+            width: 1px;
+            height: 40px;
+            background-color: rgba(148, 163, 184, 0.2);
+            top: 5px;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: var(--blue-400);
+            border-radius: 50%;
+            transform: translateX(-4px);
+        }
+
+        .timeline-label-time {
+            position: absolute;
+            font-size: 10px;
+            color: var(--slate-400);
+            bottom: -16px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: rgba(30, 41, 59, 0.6);
+            border-top: 1px solid rgba(148, 163, 184, 0.1);
+            padding: 20px 40px;
+            text-align: center;
+            margin-top: 40px;
+            font-size: 12px;
+            color: var(--slate-400);
+        }
+
+        .footer-status {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        /* Number formatting */
+        .number-format {
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .header {
+                padding: 15px;
+            }
+
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+                padding: 0 15px;
+            }
+
+            .content {
+                padding: 0 15px;
+            }
+
+            .footer {
+                padding: 15px;
+            }
+
+            .automation-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .gauge-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header fade-in">
+        <div class="header-top">
+            <div class="header-brand">
+                <div>
+                    <div class="brand-name">NH CREATIONS</div>
+                    <div class="header-subtitle">Financial Command Center</div>
+                </div>
+                <div class="brand-accent"></div>
+            </div>
+            <div class="header-meta">
+                <div class="live-clock" id="liveTime">--:-- --</div>
+                <div class="controller-info">
+                    <span class="status-dot"></span>
+                    <span>Elie Maatouk â Financial Controller</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+        <!-- Total AR -->
+        <div class="kpi-card fade-in">
+            <div class="kpi-label">Total AR</div>
+            <div class="kpi-value">â¬1,313,722</div>
+            <div class="kpi-accent accent-emerald"></div>
+        </div>
+
+        <!-- Total AP -->
+        <div class="kpi-card fade-in">
+            <div class="kpi-label">Total AP</div>
+            <div class="kpi-value">â¬3,726,783</div>
+            <div class="kpi-accent accent-red"></div>
+        </div>
+
+        <!-- Net Position -->
+        <div class="kpi-card fade-in">
+            <div class="kpi-label">Net Position</div>
+            <div class="kpi-value" style="color: var(--red-400);">-â¬2,413,061</div>
+            <div class="kpi-accent accent-red"></div>
+        </div>
+
+        <!-- Overdue AR 90+ -->
+        <div class="kpi-card fade-in pulse-glow">
+            <div class="kpi-label">Overdue AR 90+</div>
+            <div class="kpi-value" style="color: var(--red-400);">â¬616,834</div>
+            <div class="kpi-label" style="margin-bottom: 0; margin-top: 4px;">47.0% of Total</div>
+            <div class="kpi-accent accent-red"></div>
+        </div>
+
+        <!-- Open Invoices -->
+        <div class="kpi-card fade-in">
+            <div class="kpi-label">Open Invoices</div>
+            <div class="kpi-value">389</div>
+            <div class="kpi-label" style="margin-bottom: 0; margin-top: 4px;">106 AR + 283 AP</div>
+            <div class="kpi-accent accent-blue"></div>
+        </div>
+
+        <!-- Active Automations -->
+        <div class="kpi-card fade-in">
+            <div class="kpi-label">Automations</div>
+            <div class="kpi-value" style="color: var(--emerald-400);">5/5</div>
+            <div class="kpi-label" style="margin-bottom: 0; margin-top: 4px;">All Active</div>
+            <div class="kpi-accent accent-emerald"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Row 1: AR Aging & Comparison -->
+        <div class="row row-2col">
+            <!-- AR Aging Analysis -->
+            <div class="card fade-in">
+                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 20px; color: var(--slate-100);">AR Aging Analysis</h3>
+                <div class="aging-container">
+                    <!-- 0-30 days -->
+                    <div class="aging-bucket">
+                        <div class="aging-label">0-30 days</div>
+                        <div class="aging-bar">
+                            <div class="aging-bar-fill bar-0-30" style="width: 35.6%;">â¬467,962</div>
+                        </div>
+                        <div class="aging-amount">â¬467,962</div>
+                    </div>
+
+                    <!-- 31-60 days -->
+                    <div class="aging-bucket">
+                        <div class="aging-label">31-60 days</div>
+                        <div class="aging-bar">
+                            <div class="aging-bar-fill bar-31-60" style="width: 12.6%;">â¬165,935</div>
+                        </div>
+                        <div class="aging-amount">â¬165,935</div>
+                    </div>
+
+                    <!-- 61-90 days -->
+                    <div class="aging-bucket">
+                        <div class="aging-label">61-90 days</div>
+                        <div class="aging-bar">
+                            <div class="aging-bar-fill bar-61-90" style="width: 4.8%;">â¬62,992</div>
+                        </div>
+                        <div class="aging-amount">â¬62,992</div>
+                    </div>
+
+                    <!-- 90+ days -->
+                    <div class="aging-bucket">
+                        <div class="aging-label">90+ days</div>
+                        <div class="aging-bar">
+                            <div class="aging-bar-fill bar-90plus pulse-glow" style="width: 47.0%;">â¬616,834</div>
+                        </div>
+                        <div class="aging-amount">â¬616,834</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AR vs AP Comparison -->
+            <div class="card fade-in">
+                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 20px; color: var(--slate-100);">AR vs AP Comparison</h3>
+                <div class="gauge-container">
+                    <div class="gauge">
+                        <div class="gauge-label">Total AR</div>
+                        <div class="gauge-value" style="color: var(--emerald-400);">â¬1.31M</div>
+                        <div class="gauge-bar">
+                            <div class="gauge-fill" style="width: 35%; background: linear-gradient(90deg, #10b981, #34d399);">35%</div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; flex: 1;">
+                        <div class="gauge-label">NET DEFICIT</div>
+                        <div style="font-size: 28px; font-weight: 700; color: var(--red-400); margin-top: 8px;">-â¬2.41M</div>
+                    </div>
+                    <div class="gauge">
+                        <div class="gauge-label">Total AP</div>
+                        <div class="gauge-value" style="color: var(--red-400);">â¬3.72M</div>
+                        <div class="gauge-bar">
+                            <div class="gauge-fill" style="width: 65%; background: linear-gradient(90deg, #ef4444, #f87171);">65%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2: Top Debtors & Activity Feed -->
+        <div class="row row-2col">
+            <!-- Top 10 Debtors -->
+            <div class="card fade-in">
+                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--slate-100);">Top 10 Debtors</h3>
+                <div style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Client</th>
+                                <th>Amount</th>
+                                <th>Inv</th>
+                                <th>Days</th>
+                                <th>Status</th>
+                                <th>%</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="center-cell">1</td>
+                                <td style="font-weight: 500;">BLOOMINGDALES</td>
+                                <td class="amount-cell">â¬425,586</td>
+                                <td class="center-cell">8</td>
+                                <td class="center-cell">149</td>
+                                <td><span class="badge badge-critical">CRITICAL</span></td>
+                                <td class="center-cell">32.6%</td>
+                            </tr>
+                            <tr>
+                                <td class="center-cell">2</td>
+                                <td style="font-weight: 500;">YOOX NET-A-PORTER</td>
+                                <td class="amount-cell">â¬209,229</td>
+                                <td class="center-cell">10</td>
+                                <td class="center-cell">92</td>
+                                <td><span class="badge badge-overdue">OVERDUE</span></td>
+                                <td class="center-cell">16.0%</td>
+                            </tr>
+                            <tr>
+                                <td class="center-cell">3</td>
+                                <td style="font-weight: 500;">FWRD LLC</td>
+                                <td class="amount-cell">â¬88,552</td>
+                                <td class="center-cell">4</td>
+                                <td class="center-cell">58</td>
+                                <td><span class="badge badge-warning">WARNING</span></td>
+                                <td class="center-cell">6.4%</td>
+                            </tr>
+                            <tr>
+                                <td class="center-cell">4</td>
+                                <td style="font-weight: 500;">SSENSE</td>
+                                <td class="amount-cell">â¬81,360</td>
+                                <td class="center-cell">3</td>
+                                <td class="center-cell">462</td>
+                                <td><span class="badge badge-critical">CRITICAL</span></td>
+                                <td class="center-cell">6.2%</td>
+                            </tr>
+                            <tr>
+                                <td class="center-cell">5</td>
+                                <td style="font-weight: 500;">NET-A-PORTER Limited</td>
+                                <td class="amount-cell">â¬60,000</td>
+                                <td class="center-cell">6</td>
+                                <td class="center-cell">330</td>
+                                <td><span class="badge badge-critical">CRITICAL</span></td>
+                                <td class="center-cell">4.6%</td>
+                            </tr>
+                            <tr>
+                                <td class="center-cell">6</td>
+                                <td style="font-weight: 500;">mytheresa.com GmbH</td>
+                                <td class="amount-cell">â¬51,800</td>
+                                <td class="center-cell">4</td>
+                                <td class="center-cell">39</td>
+                                <td><span class="badge badge-current">CURRENT</span></td>
+                                <td class="center-cell">3.9%</td>
+                            </tr>
+                            <tr>
+                                <td class="center-cell">7</td>
+                                <td style="font-weight: 500;">Moda Operandi USA</td>
+                                <td class="amount-cell">â¬40,020</td>
+                                <td class="center-cell">5</td>
+                                <td class="center-cell">125</td>
+                                <td><span class="badge badge-overdue">OVERDUE</span></td>
+                                <td class="center-cell">3.1%</td>
+                            </tr>
+                            <tr>
+                                <td class="center-cell">8</td>
+                                <td style="font-weight: 500;">HARVEY NICHOLS UK</td>
+                                <td class="amount-cell">â¬39,358</td>
+                                <td class="center-cell">4</td>
+                                <td class="center-cell">69</td>
+                                <td><span class="badge badge-warning">WARNING</span></td>
+                                <td class="center-cell">3.0%</td>
+                            </tr>
+                            <tr>
+                                <td class="center-cell">9</td>
+                                <td style="font-weight: 500;">Monarquia Market</td>
+                                <td class="amount-cell">â¬28,092</td>
+                                <td class="center-cell">8</td>
+                                <td class="center-cell">778</td>
+                                <td><span class="badge badge-critical">CRITICAL</span></td>
+                                <td class="center-cell">2.2%</td>
+                            </tr>
+                            <tr>
+                                <td class="center-cell">10</td>
+                                <td style="font-weight: 500;">Bella Donna</td>
+                                <td class="amount-cell">â¬24,870</td>
+                                <td class="center-cell">3</td>
+                                <td class="center-cell">652</td>
+                                <td><span class="badge badge-critical">CRITICAL</span></td>
+                                <td class="center-cell">1.9%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right Column: Activity + Alerts -->
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <!-- Email Activity Feed -->
+                <div class="card fade-in">
+                    <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--slate-100);">Recent Email Activity</h3>
+
+                    <div class="activity-item new">
+                        <div class="activity-dot"></div>
+                        <div class="activity-content">
+                            <span class="activity-sender">Mainetti</span>
+                            <span class="activity-subject">Unpaid Invoice 159217 â Neck Labels</span>
+                            <div class="activity-meta">
+                                <span class="activity-amount">â¬2,589</span>
+                                <span class="badge badge-warning">FORWARDED</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item new">
+                        <div class="activity-dot"></div>
+                        <div class="activity-content">
+                            <span class="activity-sender">SPS Commerce</span>
+                            <span class="activity-subject">Invoice #PSI-117437254 â NH CREATIONS FRANCE</span>
+                            <div class="activity-meta">
+                                <span class="badge badge-current">NEW</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item new">
+                        <div class="activity-dot"></div>
+                        <div class="activity-content">
+                            <span class="activity-sender">Netamorphosis</span>
+                            <span class="activity-subject">Invoice 2558</span>
+                            <div class="activity-meta">
+                                <span class="activity-amount">$95,259</span>
+                                <span class="badge badge-critical">HIGH VALUE</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-dot"></div>
+                        <div class="activity-content">
+                            <span class="activity-sender">FLINT Studio</span>
+                            <span class="activity-subject">Invoice 3393004 â E-commerce production</span>
+                            <div class="activity-meta">
+                                <span class="badge badge-current">NEW</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-dot"></div>
+                        <div class="activity-content">
+                            <span class="activity-sender">Meta Platforms</span>
+                            <span class="activity-subject">Facture #251921779 â Mar 2026</span>
+                            <div class="activity-meta">
+                                <span class="badge badge-current">NEW</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-dot"></div>
+                        <div class="activity-content">
+                            <span class="activity-sender">Verisure</span>
+                            <span class="activity-subject">Facture SDCF61744970</span>
+                            <div class="activity-meta">
+                                <span class="badge badge-current">NEW</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Critical Alerts -->
+                <div class="card fade-in">
+                    <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--red-400);">Critical Alerts</h3>
+
+                    <div class="alert-card">
+                        <div class="alert-title">BLOOMINGDALES</div>
+                        <div class="alert-detail">â¬425,586 â¢ 149 days overdue â¢ 8 invoices</div>
+                    </div>
+
+                    <div class="alert-card">
+                        <div class="alert-title">SSENSE</div>
+                        <div class="alert-detail">â¬81,360 â¢ 462 days overdue â¢ 3 invoices</div>
+                    </div>
+
+                    <div class="alert-card">
+                        <div class="alert-title">Paper Mache Tiger</div>
+                        <div class="alert-detail">â¬170,460 â¢ OVERDUE â¢ 2 invoices (INV-5195, INV-5194)</div>
+                    </div>
+
+                    <div class="alert-card">
+                        <div class="alert-title">Monarquia Market</div>
+                        <div class="alert-detail">â¬28,092 â¢ 778 days overdue â¢ 8 invoices</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 3: Automation Status -->
+        <div class="row row-fullwidth">
+            <div class="card fade-in">
+                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 20px; color: var(--slate-100);">Automation Status</h3>
+
+                <div class="automation-grid">
+                    <!-- Daily Bill Processing -->
+                    <div class="automation-card">
+                        <div class="automation-icon">ð</div>
+                        <div class="automation-name">Daily Bill Processing</div>
+                        <div class="automation-schedule">Weekdays 8:00 AM</div>
+                        <div class="automation-next" id="next-8am">Next: Today 8:00 AM</div>
+                        <div class="automation-status">
+                            <div class="auto-dot"></div>
+                            <span class="badge badge-active">ACTIVE</span>
+                        </div>
+                    </div>
+
+                    <!-- Daily Financial Report -->
+                    <div class="automation-card">
+                        <div class="automation-icon">ð°</div>
+                        <div class="automation-name">Daily Financial Report</div>
+                        <div class="automation-schedule">Weekdays 9:00 AM</div>
+                        <div class="automation-next" id="next-9am">Next: Today 9:00 AM</div>
+                        <div class="automation-status">
+                            <div class="auto-dot"></div>
+                            <span class="badge badge-active">ACTIVE</span>
+                        </div>
+                    </div>
+
+                    <!-- Missing Bills Scanner -->
+                    <div class="automation-card">
+                        <div class="automation-icon">ð</div>
+                        <div class="automation-name">Missing Bills Scanner</div>
+                        <div class="automation-schedule">Weekdays 2:00 PM</div>
+                        <div class="automation-next" id="next-2pm">Next: Today 2:00 PM</div>
+                        <div class="automation-status">
+                            <div class="auto-dot"></div>
+                            <span class="badge badge-active">ACTIVE</span>
+                        </div>
+                    </div>
+
+                    <!-- Real-Time Alerts -->
+                    <div class="automation-card">
+                        <div class="automation-icon">ð</div>
+                        <div class="automation-name">Real-Time Alerts</div>
+                        <div class="automation-schedule">4x Daily</div>
+                        <div class="automation-next" id="next-realtime">Next: In ~1 hour</div>
+                        <div class="automation-status">
+                            <div class="auto-dot"></div>
+                            <span class="badge badge-active">ACTIVE</span>
+                        </div>
+                    </div>
+
+                    <!-- Month-Closing Reconciliation -->
+                    <div class="automation-card">
+                        <div class="automation-icon">ð</div>
+                        <div class="automation-name">Month-Closing Reconciliation</div>
+                        <div class="automation-schedule">1st of Month 9:00 AM</div>
+                        <div class="automation-next" id="next-1st">Next: May 1st 9:00 AM</div>
+                        <div class="automation-status">
+                            <div class="auto-dot"></div>
+                            <span class="badge badge-active">ACTIVE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline -->
+                <div class="timeline">
+                    <div class="timeline-label">Today's Automation Timeline (6 AM â 6 PM)</div>
+                    <div class="timeline-bar" style="height: 60px;">
+                        <div class="timeline-tick" style="left: 0%;"></div>
+                        <div class="timeline-tick" style="left: 16.67%;"></div>
+                        <div class="timeline-tick" style="left: 33.33%;"></div>
+                        <div class="timeline-tick" style="left: 50%;"></div>
+                        <div class="timeline-tick" style="left: 66.67%;"></div>
+                        <div class="timeline-tick" style="left: 83.33%;"></div>
+                        <div class="timeline-tick" style="left: 100%;"></div>
+
+                        <!-- 8 AM marker -->
+                        <div class="timeline-marker" style="left: 16.67%; background-color: var(--blue-400);">
+                            <div class="timeline-label-time" style="left: -12px;">8 AM</div>
+                        </div>
+
+                        <!-- 9 AM marker -->
+                        <div class="timeline-marker" style="left: 25%; background-color: var(--blue-400);">
+                            <div class="timeline-label-time" style="left: -12px;">9 AM</div>
+                        </div>
+
+                        <!-- 2 PM marker -->
+                        <div class="timeline-marker" style="left: 66.67%; background-color: var(--blue-400);">
+                            <div class="timeline-label-time" style="left: -12px;">2 PM</div>
+                        </div>
+
+                        <!-- 5 PM marker (4x daily) -->
+                        <div class="timeline-marker" style="left: 83.33%; background-color: var(--emerald-400);">
+                            <div class="timeline-label-time" style="left: -12px;">5 PM</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div>Data as of <strong>April 6, 2026</strong> â¢ <span id="footerTime">--:-- --</span></div>
+        <div class="footer-status">
+            <span class="status-dot"></span>
+            <span>All systems operational</span>
+        </div>
+    </div>
+
+    <script>
+        // Live clock update
+        function updateClock() {
+            const now = new Date();
+            const formatter = new Intl.DateTimeFormat('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+            const timeString = formatter.format(now);
+            document.getElementById('liveTime').textContent = timeString;
+            document.getElementById('footerTime').textContent = timeString;
+
+            // Update next run times for automations
+            updateAutomationTimes(now);
+        }
+
+        function updateAutomationTimes(now) {
+            const currentHour = now.getHours();
+            const currentMinutes = now.getMinutes();
+            const isDayToday = now.getDay() !== 0 && now.getDay() !== 6;
+
+            // Next 8 AM
+            if (currentHour >= 8 && isDayToday) {
+                document.getElementById('next-8am').textContent = 'Tomorrow 8:00 AM';
+            } else if (isDayToday) {
+                document.getElementById('next-8am').textContent = 'Today 8:00 AM';
+            } else {
+                document.getElementById('next-8am').textContent = 'Next weekday 8:00 AM';
+            }
+
+            // Next 9 AM
+            if (currentHour >= 9 && isDayToday) {
+                document.getElementById('next-9am').textContent = 'Tomorrow 9:00 AM';
+            } else if (isDayToday) {
+                document.getElementById('next-9am').textContent = 'Today 9:00 AM';
+            } else {
+                document.getElementById('next-9am').textContent = 'Next weekday 9:00 AM';
+            }
+
+            // Next 2 PM
+            if (currentHour >= 14 && isDayToday) {
+                document.getElementById('next-2pm').textContent = 'Tomorrow 2:00 PM';
+            } else if (isDayToday) {
+                document.getElementById('next-2pm').textContent = 'Today 2:00 PM';
+            } else {
+                document.getElementById('next-2pm').textContent = 'Next weekday 2:00 PM';
+            }
+
+            // Real-time alerts (4x daily at 8am, 11am, 2pm, 5pm)
+            const nextAlertTimes = [8, 11, 14, 17];
+            let nextAlert = null;
+            for (let time of nextAlertTimes) {
+                if (currentHour < time) {
+                    nextAlert = time;
+                    break;
+                }
+            }
+
+            if (nextAlert !== null) {
+                const hoursUntil = nextAlert - currentHour;
+                const minutesUntil = 60 - currentMinutes;
+                if (hoursUntil === 0) {
+                    document.getElementById('next-realtime').textContent = 'In ~' + minutesUntil + ' min';
+                } else {
+                    document.getElementById('next-realtime').textContent = 'Today ' + (nextAlert > 12 ? nextAlert - 12 : nextAlert) + ':00 ' + (nextAlert >= 12 ? 'PM' : 'AM');
+                }
+            } else {
+                document.getElementById('next-realtime').textContent = 'Tomorrow 8:00 AM';
+            }
+
+            // Month closing (1st of month)
+            const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+            if (now.getDate() === 1 && currentHour >= 9) {
+                document.getElementById('next-1st').textContent = 'Next month, 1st 9:00 AM';
+            } else if (now.getDate() < 1) {
+                document.getElementById('next-1st').textContent = 'Today 9:00 AM';
+            } else {
+                const daysUntilFirst = daysInMonth - now.getDate() + 1;
+                document.getElementById('next-1st').textContent = 'In ' + daysUntilFirst + ' days (9:00 AM)';
+            }
+        }
+
+        // Update clock immediately and then every second
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // Add fade-in animation to body on load
+        window.addEventListener('load', function() {
+            const elements = document.querySelectorAll('.fade-in');
+            elements.forEach(function(el, index) {
+                el.style.animationDelay = (index * 0.1) + 's';
+            });
+        });
+    </script>
+</body>
+</html>
