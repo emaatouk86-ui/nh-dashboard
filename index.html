@@ -670,6 +670,152 @@
             margin-top: 8px;
         }
 
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            padding: 16px 20px;
+            background: rgba(148, 163, 184, 0.05);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        .filter-bar select {
+            background-color: var(--slate-800);
+            color: var(--slate-100);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            min-width: 160px;
+            transition: border-color 0.2s;
+        }
+        .filter-bar select:hover, .filter-bar select:focus {
+            border-color: var(--emerald-400);
+            outline: none;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .filter-group label {
+            font-size: 11px;
+            color: var(--slate-400);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        .filter-reset {
+            background: none;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            color: var(--slate-400);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .filter-reset:hover {
+            border-color: var(--red-400);
+            color: var(--red-400);
+        }
+        /* Sales KPI Grid */
+        .sales-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .sales-kpi {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(20, 29, 44, 0.8) 100%);
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            border-radius: 8px;
+            padding: 18px;
+            transition: all 0.3s ease;
+        }
+        .sales-kpi:hover {
+            transform: translateY(-3px);
+            border-color: rgba(148, 163, 184, 0.25);
+        }
+        .sales-kpi-label {
+            font-size: 11px;
+            color: var(--slate-400);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .sales-kpi-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--slate-100);
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        .sales-kpi-sub {
+            font-size: 11px;
+            color: var(--slate-400);
+            margin-top: 4px;
+        }
+        .positive { color: var(--emerald-400) !important; }
+        .negative { color: var(--red-400) !important; }
+        /* Horizontal Bar Chart */
+        .hbar-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .hbar-label {
+            min-width: 80px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--slate-300);
+            text-align: right;
+        }
+        .hbar-track {
+            flex: 1;
+            height: 22px;
+            background: rgba(148, 163, 184, 0.08);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .hbar-fill {
+            height: 100%;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding-left: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            transition: width 0.5s ease;
+        }
+        .hbar-amount {
+            min-width: 90px;
+            text-align: right;
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--slate-100);
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        .bar-sales { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+        .bar-sales-alt { background: linear-gradient(90deg, #6366f1, #818cf8); }
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--slate-100);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--blue-400);
+        }
+        .filterable-row { transition: opacity 0.3s, max-height 0.3s; overflow: hidden; }
+        .filterable-row.hidden { opacity: 0; max-height: 0 !important; margin: 0; padding: 0; }
+
         /* Number formatting */
         .number-format {
             font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
@@ -1072,6 +1218,223 @@
             </div>
         </div>
 
+        <!-- ═══════════════════════ SALES SECTION ═══════════════════════ -->
+        <div class="row row-fullwidth">
+            <div class="card fade-in">
+                <div class="section-title">Sales Overview</div>
+
+                <!-- Filters -->
+                <div class="filter-bar" id="salesFilters">
+                    <div class="filter-group">
+                        <label>Period</label>
+                        <select id="filterPeriod" onchange="applyFilters()">
+                            <option value="all">All Periods</option>
+                            <option value="2026">FY 2026</option>
+                            <option value="2025">FY 2025</option>
+                            <option value="q1-2026">Q1 2026</option>
+                            <option value="q2-2026" selected>Q2 2026</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Client</label>
+                        <select id="filterClient" onchange="applyFilters()">
+                            <option value="all">All Clients</option>
+                            <option value="ssense">SSENSE</option>
+                            <option value="nap">NET-A-PORTER</option>
+                            <option value="fwrd">FWRD</option>
+                            <option value="mytheresa">Mytheresa</option>
+                            <option value="harrods">Harrods</option>
+                            <option value="bloomingdales">Bloomingdales</option>
+                            <option value="harvey-nichols">Harvey Nichols</option>
+                            <option value="moda">Moda Operandi</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Product</label>
+                        <select id="filterProduct" onchange="applyFilters()">
+                            <option value="all">All Products</option>
+                            <option value="jackets">Leather Jackets</option>
+                            <option value="bags">Bags &amp; Clutches</option>
+                            <option value="accessories">Accessories</option>
+                            <option value="custom">Custom / Bespoke</option>
+                        </select>
+                    </div>
+                    <button class="filter-reset" onclick="resetFilters()">Reset</button>
+                </div>
+
+                <!-- Sales KPIs -->
+                <div class="sales-kpi-grid" id="salesKpis">
+                    <div class="sales-kpi">
+                        <div class="sales-kpi-label">Total Sales</div>
+                        <div class="sales-kpi-value" id="kpiTotalSales">&euro;2,847,530</div>
+                        <div class="sales-kpi-sub"><span class="positive">+12.4%</span> vs prior period</div>
+                    </div>
+                    <div class="sales-kpi">
+                        <div class="sales-kpi-label">Orders</div>
+                        <div class="sales-kpi-value" id="kpiOrders">214</div>
+                        <div class="sales-kpi-sub"><span class="positive">+8.1%</span> vs prior period</div>
+                    </div>
+                    <div class="sales-kpi">
+                        <div class="sales-kpi-label">Avg Order Value</div>
+                        <div class="sales-kpi-value" id="kpiAov">&euro;13,306</div>
+                        <div class="sales-kpi-sub"><span class="positive">+4.0%</span> vs prior period</div>
+                    </div>
+                    <div class="sales-kpi">
+                        <div class="sales-kpi-label">Gross Margin</div>
+                        <div class="sales-kpi-value" id="kpiMargin">62.3%</div>
+                        <div class="sales-kpi-sub"><span class="negative">-1.2pts</span> vs prior period</div>
+                    </div>
+                    <div class="sales-kpi">
+                        <div class="sales-kpi-label">Top Client</div>
+                        <div class="sales-kpi-value" style="font-size:16px;" id="kpiTopClient">SSENSE</div>
+                        <div class="sales-kpi-sub">&euro;612,400 (21.5%)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row: Sales by Client + Sales by Product -->
+        <div class="row row-2col">
+            <!-- Sales by Client -->
+            <div class="card fade-in">
+                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--slate-100);">Sales by Client</h3>
+                <div id="salesByClient">
+                    <div class="hbar-row filterable-row" data-client="ssense">
+                        <div class="hbar-label">SSENSE</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:100%"></div></div>
+                        <div class="hbar-amount">&euro;612,400</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-client="nap">
+                        <div class="hbar-label">NET-A-PORTER</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:78%"></div></div>
+                        <div class="hbar-amount">&euro;478,200</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-client="fwrd">
+                        <div class="hbar-label">FWRD</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:65%"></div></div>
+                        <div class="hbar-amount">&euro;397,850</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-client="mytheresa">
+                        <div class="hbar-label">Mytheresa</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:56%"></div></div>
+                        <div class="hbar-amount">&euro;341,700</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-client="harrods">
+                        <div class="hbar-label">Harrods</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:44%"></div></div>
+                        <div class="hbar-amount">&euro;271,350</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-client="bloomingdales">
+                        <div class="hbar-label">Bloomingdales</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:39%"></div></div>
+                        <div class="hbar-amount">&euro;238,920</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-client="harvey-nichols">
+                        <div class="hbar-label">Harvey Nichols</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:34%"></div></div>
+                        <div class="hbar-amount">&euro;209,110</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-client="moda">
+                        <div class="hbar-label">Moda Operandi</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:49%"></div></div>
+                        <div class="hbar-amount">&euro;298,000</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sales by Product -->
+            <div class="card fade-in">
+                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--slate-100);">Sales by Product Category</h3>
+                <div id="salesByProduct">
+                    <div class="hbar-row filterable-row" data-product="jackets">
+                        <div class="hbar-label">Jackets</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales-alt" style="width:100%"></div></div>
+                        <div class="hbar-amount">&euro;1,538,466</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-product="bags">
+                        <div class="hbar-label">Bags</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales-alt" style="width:45%"></div></div>
+                        <div class="hbar-amount">&euro;697,245</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-product="accessories">
+                        <div class="hbar-label">Accessories</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales-alt" style="width:27%"></div></div>
+                        <div class="hbar-amount">&euro;412,330</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-product="custom">
+                        <div class="hbar-label">Custom</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales-alt" style="width:13%"></div></div>
+                        <div class="hbar-amount">&euro;199,489</div>
+                    </div>
+                </div>
+
+                <!-- Product Mix Summary -->
+                <div style="margin-top: 25px; padding: 15px; background: rgba(148,163,184,0.05); border-radius: 6px;">
+                    <div style="font-size:12px; color:var(--slate-400); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">Product Mix</div>
+                    <div style="display:flex; gap:4px; height:24px; border-radius:4px; overflow:hidden;">
+                        <div style="width:54%; background:linear-gradient(90deg,#6366f1,#818cf8); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:white;">Jackets 54%</div>
+                        <div style="width:24.5%; background:linear-gradient(90deg,#3b82f6,#60a5fa); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:white;">Bags 24.5%</div>
+                        <div style="width:14.5%; background:linear-gradient(90deg,#10b981,#34d399); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:white;">Acc 14.5%</div>
+                        <div style="width:7%; background:linear-gradient(90deg,#f59e0b,#fbbf24); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:white;">7%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row: Sales by Month -->
+        <div class="row row-fullwidth">
+            <div class="card fade-in">
+                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--slate-100);">Monthly Sales Trend</h3>
+                <div id="salesByMonth">
+                    <div class="hbar-row filterable-row" data-period="q1-2026,2026">
+                        <div class="hbar-label">Jan 2026</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:52%"></div></div>
+                        <div class="hbar-amount">&euro;312,450</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-period="q1-2026,2026">
+                        <div class="hbar-label">Feb 2026</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:61%"></div></div>
+                        <div class="hbar-amount">&euro;368,200</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-period="q1-2026,2026">
+                        <div class="hbar-label">Mar 2026</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:74%"></div></div>
+                        <div class="hbar-amount">&euro;445,880</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-period="q2-2026,2026">
+                        <div class="hbar-label" style="color:var(--emerald-400);">Apr 2026</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:100%"></div></div>
+                        <div class="hbar-amount" style="color:var(--emerald-400);">&euro;602,130</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-period="q2-2026,2026">
+                        <div class="hbar-label">May 2026</div>
+                        <div class="hbar-track"><div class="hbar-fill" style="width:78%; background: repeating-linear-gradient(90deg, #3b82f6 0px, #60a5fa 4px, transparent 4px, transparent 8px); opacity:0.5;"></div></div>
+                        <div class="hbar-amount" style="color:var(--slate-400);">&euro;468,000 (est)</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-period="q2-2026,2026">
+                        <div class="hbar-label">Jun 2026</div>
+                        <div class="hbar-track"><div class="hbar-fill" style="width:84%; background: repeating-linear-gradient(90deg, #3b82f6 0px, #60a5fa 4px, transparent 4px, transparent 8px); opacity:0.5;"></div></div>
+                        <div class="hbar-amount" style="color:var(--slate-400);">&euro;510,000 (est)</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-period="2025">
+                        <div class="hbar-label" style="color:var(--slate-500);">Oct 2025</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:42%; opacity:0.6;"></div></div>
+                        <div class="hbar-amount" style="color:var(--slate-500);">&euro;254,300</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-period="2025">
+                        <div class="hbar-label" style="color:var(--slate-500);">Nov 2025</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:56%; opacity:0.6;"></div></div>
+                        <div class="hbar-amount" style="color:var(--slate-500);">&euro;338,700</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-period="2025">
+                        <div class="hbar-label" style="color:var(--slate-500);">Dec 2025</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:67%; opacity:0.6;"></div></div>
+                        <div class="hbar-amount" style="color:var(--slate-500);">&euro;401,200</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Row 3: Automation Status -->
         <div class="row row-fullwidth">
             <div class="card fade-in">
@@ -1080,7 +1443,7 @@
                 <div class="automation-grid">
                     <!-- Daily Bill Processing -->
                     <div class="automation-card">
-                        <div class="automation-icon">ð</div>
+                        <div class="automation-icon">📄</div>
                         <div class="automation-name">Daily Bill Processing</div>
                         <div class="automation-schedule">Weekdays 8:00 AM</div>
                         <div class="automation-next" id="next-8am">Next: Today 8:00 AM</div>
@@ -1092,7 +1455,7 @@
 
                     <!-- Daily Financial Report -->
                     <div class="automation-card">
-                        <div class="automation-icon">ð°</div>
+                        <div class="automation-icon">💰</div>
                         <div class="automation-name">Daily Financial Report</div>
                         <div class="automation-schedule">Weekdays 9:00 AM</div>
                         <div class="automation-next" id="next-9am">Next: Today 9:00 AM</div>
@@ -1104,7 +1467,7 @@
 
                     <!-- Missing Bills Scanner -->
                     <div class="automation-card">
-                        <div class="automation-icon">ð</div>
+                        <div class="automation-icon">🔍</div>
                         <div class="automation-name">Missing Bills Scanner</div>
                         <div class="automation-schedule">Weekdays 2:00 PM</div>
                         <div class="automation-next" id="next-2pm">Next: Today 2:00 PM</div>
@@ -1116,7 +1479,7 @@
 
                     <!-- Real-Time Alerts -->
                     <div class="automation-card">
-                        <div class="automation-icon">ð</div>
+                        <div class="automation-icon">🔔</div>
                         <div class="automation-name">Real-Time Alerts</div>
                         <div class="automation-schedule">4x Daily</div>
                         <div class="automation-next" id="next-realtime">Next: In ~1 hour</div>
@@ -1128,7 +1491,7 @@
 
                     <!-- Month-Closing Reconciliation -->
                     <div class="automation-card">
-                        <div class="automation-icon">ð</div>
+                        <div class="automation-icon">📊</div>
                         <div class="automation-name">Month-Closing Reconciliation</div>
                         <div class="automation-schedule">1st of Month 9:00 AM</div>
                         <div class="automation-next" id="next-1st">Next: May 1st 9:00 AM</div>
@@ -1280,6 +1643,41 @@
                 el.style.animationDelay = (index * 0.1) + 's';
             });
         });
+
+        // ── Sales Filter Logic ──
+        function applyFilters() {
+            var period = document.getElementById('filterPeriod').value;
+            var client = document.getElementById('filterClient').value;
+            var product = document.getElementById('filterProduct').value;
+
+            // Filter client bars
+            document.querySelectorAll('#salesByClient .filterable-row').forEach(function(row) {
+                var show = (client === 'all' || row.getAttribute('data-client') === client);
+                row.classList.toggle('hidden', !show);
+            });
+
+            // Filter product bars
+            document.querySelectorAll('#salesByProduct .filterable-row').forEach(function(row) {
+                var show = (product === 'all' || row.getAttribute('data-product') === product);
+                row.classList.toggle('hidden', !show);
+            });
+
+            // Filter monthly bars
+            document.querySelectorAll('#salesByMonth .filterable-row').forEach(function(row) {
+                var periods = (row.getAttribute('data-period') || '').split(',');
+                var show = (period === 'all' || periods.indexOf(period) !== -1);
+                row.classList.toggle('hidden', !show);
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById('filterPeriod').value = 'all';
+            document.getElementById('filterClient').value = 'all';
+            document.getElementById('filterProduct').value = 'all';
+            document.querySelectorAll('.filterable-row').forEach(function(row) {
+                row.classList.remove('hidden');
+            });
+        }
     </script>
 </body>
 </html>
