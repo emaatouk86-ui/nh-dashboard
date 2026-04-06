@@ -694,9 +694,36 @@
             min-width: 160px;
             transition: border-color 0.2s;
         }
-        .filter-bar select:hover, .filter-bar select:focus {
+        .filter-bar select:hover, .filter-bar select:focus,
+        .filter-bar input:hover, .filter-bar input:focus {
             border-color: var(--emerald-400);
             outline: none;
+        }
+        .filter-bar input[type="date"] {
+            background-color: var(--slate-800);
+            color: var(--slate-100);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            min-width: 140px;
+            transition: border-color 0.2s;
+            color-scheme: dark;
+        }
+        .custom-date-row {
+            display: none;
+            width: 100%;
+            gap: 15px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            padding-top: 12px;
+            margin-top: 4px;
+            border-top: 1px solid rgba(148, 163, 184, 0.08);
+        }
+        .custom-date-row.visible {
+            display: flex;
         }
         .filter-group {
             display: flex;
@@ -814,7 +841,7 @@
             border-bottom: 2px solid var(--blue-400);
         }
         .filterable-row { transition: opacity 0.3s, max-height 0.3s; overflow: hidden; }
-        .filterable-row.hidden { opacity: 0; max-height: 0 !important; margin: 0; padding: 0; }
+        .filterable-row.filter-hidden { opacity: 0; max-height: 0 !important; margin: 0; padding: 0; display: none; }
 
         /* Number formatting */
         .number-format {
@@ -1230,64 +1257,86 @@
                         <select id="filterPeriod" onchange="applyFilters()">
                             <option value="all">All Periods</option>
                             <option value="2026">FY 2026</option>
-                            <option value="2025">FY 2025</option>
                             <option value="q1-2026">Q1 2026</option>
-                            <option value="q2-2026" selected>Q2 2026</option>
+                            <option value="q2-2026">Q2 2026</option>
+                            <option value="jan-2026">January 2026</option>
+                            <option value="feb-2026">February 2026</option>
+                            <option value="mar-2026">March 2026</option>
+                            <option value="apr-2026">April 2026</option>
+                            <option value="custom">Custom Date Range</option>
                         </select>
                     </div>
                     <div class="filter-group">
                         <label>Client</label>
                         <select id="filterClient" onchange="applyFilters()">
                             <option value="all">All Clients</option>
-                            <option value="ssense">SSENSE</option>
-                            <option value="nap">NET-A-PORTER</option>
-                            <option value="fwrd">FWRD</option>
                             <option value="mytheresa">Mytheresa</option>
-                            <option value="harrods">Harrods</option>
+                            <option value="nap">NET-A-PORTER / YOOX</option>
+                            <option value="fwrd">FWRD</option>
+                            <option value="browns">Browns</option>
                             <option value="bloomingdales">Bloomingdales</option>
-                            <option value="harvey-nichols">Harvey Nichols</option>
-                            <option value="moda">Moda Operandi</option>
+                            <option value="ssense">SSENSE</option>
+                            <option value="holt">Holt Renfrew</option>
+                            <option value="breuninger">Breuninger</option>
+                            <option value="david-jones">David Jones</option>
+                            <option value="grace">Grace Melbourne</option>
                         </select>
                     </div>
                     <div class="filter-group">
                         <label>Product</label>
                         <select id="filterProduct" onchange="applyFilters()">
                             <option value="all">All Products</option>
-                            <option value="jackets">Leather Jackets</option>
-                            <option value="bags">Bags &amp; Clutches</option>
-                            <option value="accessories">Accessories</option>
-                            <option value="custom">Custom / Bespoke</option>
+                            <option value="sima">Sima</option>
+                            <option value="pia">Pia</option>
+                            <option value="althea">Althea Ponyhair</option>
+                            <option value="solene">Sol&egrave;ne</option>
+                            <option value="ariste">Ariste</option>
+                            <option value="evita">Evita</option>
+                            <option value="briar-leather">Briar Leather</option>
+                            <option value="birthday">Birthday Coat</option>
+                            <option value="beck">Beck</option>
+                            <option value="park">Park</option>
                         </select>
                     </div>
                     <button class="filter-reset" onclick="resetFilters()">Reset</button>
+                    <div class="custom-date-row" id="customDateRow">
+                        <div class="filter-group">
+                            <label>From</label>
+                            <input type="date" id="filterDateFrom" value="2026-01-01" onchange="applyFilters()">
+                        </div>
+                        <div class="filter-group">
+                            <label>To</label>
+                            <input type="date" id="filterDateTo" value="2026-04-06" onchange="applyFilters()">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Sales KPIs -->
                 <div class="sales-kpi-grid" id="salesKpis">
                     <div class="sales-kpi">
-                        <div class="sales-kpi-label">Total Sales</div>
-                        <div class="sales-kpi-value" id="kpiTotalSales">&euro;2,847,530</div>
-                        <div class="sales-kpi-sub"><span class="positive">+12.4%</span> vs prior period</div>
+                        <div class="sales-kpi-label">Total Revenue</div>
+                        <div class="sales-kpi-value" id="kpiTotalSales">&euro;8,207,604</div>
+                        <div class="sales-kpi-sub">Jan &ndash; Apr 2026 (Odoo posted)</div>
                     </div>
                     <div class="sales-kpi">
-                        <div class="sales-kpi-label">Orders</div>
-                        <div class="sales-kpi-value" id="kpiOrders">214</div>
-                        <div class="sales-kpi-sub"><span class="positive">+8.1%</span> vs prior period</div>
+                        <div class="sales-kpi-label">Invoices</div>
+                        <div class="sales-kpi-value" id="kpiOrders">8,118</div>
+                        <div class="sales-kpi-sub">17,630 units sold</div>
                     </div>
                     <div class="sales-kpi">
                         <div class="sales-kpi-label">Avg Order Value</div>
-                        <div class="sales-kpi-value" id="kpiAov">&euro;13,306</div>
-                        <div class="sales-kpi-sub"><span class="positive">+4.0%</span> vs prior period</div>
+                        <div class="sales-kpi-value" id="kpiAov">&euro;1,011</div>
+                        <div class="sales-kpi-sub">per invoice</div>
                     </div>
                     <div class="sales-kpi">
                         <div class="sales-kpi-label">Gross Margin</div>
-                        <div class="sales-kpi-value" id="kpiMargin">62.3%</div>
-                        <div class="sales-kpi-sub"><span class="negative">-1.2pts</span> vs prior period</div>
+                        <div class="sales-kpi-value" id="kpiMargin">67.8%</div>
+                        <div class="sales-kpi-sub">COGS &euro;2,646,500</div>
                     </div>
                     <div class="sales-kpi">
                         <div class="sales-kpi-label">Top Client</div>
-                        <div class="sales-kpi-value" style="font-size:16px;" id="kpiTopClient">SSENSE</div>
-                        <div class="sales-kpi-sub">&euro;612,400 (21.5%)</div>
+                        <div class="sales-kpi-value" style="font-size:14px;" id="kpiTopClient">Mytheresa</div>
+                        <div class="sales-kpi-sub">&euro;405,599 (4.9%)</div>
                     </div>
                 </div>
             </div>
@@ -1299,83 +1348,121 @@
             <div class="card fade-in">
                 <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--slate-100);">Sales by Client</h3>
                 <div id="salesByClient">
-                    <div class="hbar-row filterable-row" data-client="ssense">
-                        <div class="hbar-label">SSENSE</div>
+                    <div class="hbar-row filterable-row" data-client="mytheresa">
+                        <div class="hbar-label">Mytheresa</div>
                         <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:100%"></div></div>
-                        <div class="hbar-amount">&euro;612,400</div>
+                        <div class="hbar-amount">&euro;405,599</div>
                     </div>
                     <div class="hbar-row filterable-row" data-client="nap">
-                        <div class="hbar-label">NET-A-PORTER</div>
-                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:78%"></div></div>
-                        <div class="hbar-amount">&euro;478,200</div>
+                        <div class="hbar-label">YOOX / NET-A-PORTER</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:50%"></div></div>
+                        <div class="hbar-amount">&euro;201,899</div>
                     </div>
                     <div class="hbar-row filterable-row" data-client="fwrd">
                         <div class="hbar-label">FWRD</div>
-                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:65%"></div></div>
-                        <div class="hbar-amount">&euro;397,850</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:15%"></div></div>
+                        <div class="hbar-amount">&euro;61,365</div>
                     </div>
-                    <div class="hbar-row filterable-row" data-client="mytheresa">
-                        <div class="hbar-label">Mytheresa</div>
-                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:56%"></div></div>
-                        <div class="hbar-amount">&euro;341,700</div>
-                    </div>
-                    <div class="hbar-row filterable-row" data-client="harrods">
-                        <div class="hbar-label">Harrods</div>
-                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:44%"></div></div>
-                        <div class="hbar-amount">&euro;271,350</div>
+                    <div class="hbar-row filterable-row" data-client="browns">
+                        <div class="hbar-label">Browns</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:14%"></div></div>
+                        <div class="hbar-amount">&euro;58,772</div>
                     </div>
                     <div class="hbar-row filterable-row" data-client="bloomingdales">
                         <div class="hbar-label">Bloomingdales</div>
-                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:39%"></div></div>
-                        <div class="hbar-amount">&euro;238,920</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:12%"></div></div>
+                        <div class="hbar-amount">&euro;49,950</div>
                     </div>
-                    <div class="hbar-row filterable-row" data-client="harvey-nichols">
-                        <div class="hbar-label">Harvey Nichols</div>
-                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:34%"></div></div>
-                        <div class="hbar-amount">&euro;209,110</div>
+                    <div class="hbar-row filterable-row" data-client="ssense">
+                        <div class="hbar-label">SSENSE</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:7%"></div></div>
+                        <div class="hbar-amount">&euro;26,565</div>
                     </div>
-                    <div class="hbar-row filterable-row" data-client="moda">
-                        <div class="hbar-label">Moda Operandi</div>
-                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:49%"></div></div>
-                        <div class="hbar-amount">&euro;298,000</div>
+                    <div class="hbar-row filterable-row" data-client="holt">
+                        <div class="hbar-label">Holt Renfrew</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:6%"></div></div>
+                        <div class="hbar-amount">&euro;25,920</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-client="nap">
+                        <div class="hbar-label">NET-A-PORTER (UK)</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:6%"></div></div>
+                        <div class="hbar-amount">&euro;26,110</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-client="grace">
+                        <div class="hbar-label">Grace Melbourne</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:6%"></div></div>
+                        <div class="hbar-amount">&euro;23,956</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-client="david-jones">
+                        <div class="hbar-label">David Jones</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:6%"></div></div>
+                        <div class="hbar-amount">&euro;23,400</div>
                     </div>
                 </div>
             </div>
 
             <!-- Sales by Product -->
             <div class="card fade-in">
-                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--slate-100);">Sales by Product Category</h3>
+                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--slate-100);">Top Products by Revenue</h3>
                 <div id="salesByProduct">
-                    <div class="hbar-row filterable-row" data-product="jackets">
-                        <div class="hbar-label">Jackets</div>
+                    <div class="hbar-row filterable-row" data-product="sima">
+                        <div class="hbar-label">Sima</div>
                         <div class="hbar-track"><div class="hbar-fill bar-sales-alt" style="width:100%"></div></div>
-                        <div class="hbar-amount">&euro;1,538,466</div>
+                        <div class="hbar-amount">&euro;536,899</div>
                     </div>
-                    <div class="hbar-row filterable-row" data-product="bags">
-                        <div class="hbar-label">Bags</div>
-                        <div class="hbar-track"><div class="hbar-fill bar-sales-alt" style="width:45%"></div></div>
-                        <div class="hbar-amount">&euro;697,245</div>
+                    <div class="hbar-row filterable-row" data-product="pia">
+                        <div class="hbar-label">Pia</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales-alt" style="width:53%"></div></div>
+                        <div class="hbar-amount">&euro;285,348</div>
                     </div>
-                    <div class="hbar-row filterable-row" data-product="accessories">
-                        <div class="hbar-label">Accessories</div>
-                        <div class="hbar-track"><div class="hbar-fill bar-sales-alt" style="width:27%"></div></div>
-                        <div class="hbar-amount">&euro;412,330</div>
+                    <div class="hbar-row filterable-row" data-product="althea">
+                        <div class="hbar-label">Althea Ponyhair</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales-alt" style="width:51%"></div></div>
+                        <div class="hbar-amount">&euro;275,134</div>
                     </div>
-                    <div class="hbar-row filterable-row" data-product="custom">
-                        <div class="hbar-label">Custom</div>
-                        <div class="hbar-track"><div class="hbar-fill bar-sales-alt" style="width:13%"></div></div>
-                        <div class="hbar-amount">&euro;199,489</div>
+                    <div class="hbar-row filterable-row" data-product="solene">
+                        <div class="hbar-label">Sol&egrave;ne</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales-alt" style="width:50%"></div></div>
+                        <div class="hbar-amount">&euro;271,018</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-product="ariste">
+                        <div class="hbar-label">Ariste</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales-alt" style="width:48%"></div></div>
+                        <div class="hbar-amount">&euro;259,211</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-product="evita">
+                        <div class="hbar-label">Evita</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales-alt" style="width:47%"></div></div>
+                        <div class="hbar-amount">&euro;253,138</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-product="briar-leather">
+                        <div class="hbar-label">Briar Leather</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales-alt" style="width:44%"></div></div>
+                        <div class="hbar-amount">&euro;234,258</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-product="birthday">
+                        <div class="hbar-label">Birthday Coat</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales-alt" style="width:40%"></div></div>
+                        <div class="hbar-amount">&euro;213,103</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-product="beck">
+                        <div class="hbar-label">Beck</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales-alt" style="width:39%"></div></div>
+                        <div class="hbar-amount">&euro;207,844</div>
+                    </div>
+                    <div class="hbar-row filterable-row" data-product="park">
+                        <div class="hbar-label">Park</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales-alt" style="width:38%"></div></div>
+                        <div class="hbar-amount">&euro;203,070</div>
                     </div>
                 </div>
 
-                <!-- Product Mix Summary -->
+                <!-- Channel Mix Summary -->
                 <div style="margin-top: 25px; padding: 15px; background: rgba(148,163,184,0.05); border-radius: 6px;">
-                    <div style="font-size:12px; color:var(--slate-400); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">Product Mix</div>
+                    <div style="font-size:12px; color:var(--slate-400); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">Sales Channel Mix</div>
                     <div style="display:flex; gap:4px; height:24px; border-radius:4px; overflow:hidden;">
-                        <div style="width:54%; background:linear-gradient(90deg,#6366f1,#818cf8); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:white;">Jackets 54%</div>
-                        <div style="width:24.5%; background:linear-gradient(90deg,#3b82f6,#60a5fa); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:white;">Bags 24.5%</div>
-                        <div style="width:14.5%; background:linear-gradient(90deg,#10b981,#34d399); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:white;">Acc 14.5%</div>
-                        <div style="width:7%; background:linear-gradient(90deg,#f59e0b,#fbbf24); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:white;">7%</div>
+                        <div style="width:85.5%; background:linear-gradient(90deg,#6366f1,#818cf8); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:white;">Direct / E-Commerce 85.5%</div>
+                        <div style="width:14.5%; background:linear-gradient(90deg,#3b82f6,#60a5fa); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:white;">Wholesale 14.5%</div>
                     </div>
                 </div>
             </div>
@@ -1386,51 +1473,71 @@
             <div class="card fade-in">
                 <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--slate-100);">Monthly Sales Trend</h3>
                 <div id="salesByMonth">
-                    <div class="hbar-row filterable-row" data-period="q1-2026,2026">
+                    <div class="hbar-row filterable-row" data-period="q1-2026,2026,jan-2026" data-date="2026-01">
                         <div class="hbar-label">Jan 2026</div>
-                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:52%"></div></div>
-                        <div class="hbar-amount">&euro;312,450</div>
-                    </div>
-                    <div class="hbar-row filterable-row" data-period="q1-2026,2026">
-                        <div class="hbar-label">Feb 2026</div>
-                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:61%"></div></div>
-                        <div class="hbar-amount">&euro;368,200</div>
-                    </div>
-                    <div class="hbar-row filterable-row" data-period="q1-2026,2026">
-                        <div class="hbar-label">Mar 2026</div>
-                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:74%"></div></div>
-                        <div class="hbar-amount">&euro;445,880</div>
-                    </div>
-                    <div class="hbar-row filterable-row" data-period="q2-2026,2026">
-                        <div class="hbar-label" style="color:var(--emerald-400);">Apr 2026</div>
                         <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:100%"></div></div>
-                        <div class="hbar-amount" style="color:var(--emerald-400);">&euro;602,130</div>
+                        <div class="hbar-amount">&euro;3,304,102</div>
                     </div>
-                    <div class="hbar-row filterable-row" data-period="q2-2026,2026">
-                        <div class="hbar-label">May 2026</div>
-                        <div class="hbar-track"><div class="hbar-fill" style="width:78%; background: repeating-linear-gradient(90deg, #3b82f6 0px, #60a5fa 4px, transparent 4px, transparent 8px); opacity:0.5;"></div></div>
-                        <div class="hbar-amount" style="color:var(--slate-400);">&euro;468,000 (est)</div>
+                    <div class="hbar-row filterable-row" data-period="q1-2026,2026,feb-2026" data-date="2026-02">
+                        <div class="hbar-label">Feb 2026</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:92%"></div></div>
+                        <div class="hbar-amount">&euro;3,048,177</div>
                     </div>
-                    <div class="hbar-row filterable-row" data-period="q2-2026,2026">
-                        <div class="hbar-label">Jun 2026</div>
-                        <div class="hbar-track"><div class="hbar-fill" style="width:84%; background: repeating-linear-gradient(90deg, #3b82f6 0px, #60a5fa 4px, transparent 4px, transparent 8px); opacity:0.5;"></div></div>
-                        <div class="hbar-amount" style="color:var(--slate-400);">&euro;510,000 (est)</div>
+                    <div class="hbar-row filterable-row" data-period="q1-2026,2026,mar-2026" data-date="2026-03">
+                        <div class="hbar-label">Mar 2026</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:24%"></div></div>
+                        <div class="hbar-amount">&euro;782,039</div>
                     </div>
-                    <div class="hbar-row filterable-row" data-period="2025">
-                        <div class="hbar-label" style="color:var(--slate-500);">Oct 2025</div>
-                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:42%; opacity:0.6;"></div></div>
-                        <div class="hbar-amount" style="color:var(--slate-500);">&euro;254,300</div>
+                    <div class="hbar-row filterable-row" data-period="q2-2026,2026,apr-2026" data-date="2026-04">
+                        <div class="hbar-label" style="color:var(--emerald-400);">Apr 2026</div>
+                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:32%"></div></div>
+                        <div class="hbar-amount" style="color:var(--emerald-400);">&euro;1,073,286</div>
                     </div>
-                    <div class="hbar-row filterable-row" data-period="2025">
-                        <div class="hbar-label" style="color:var(--slate-500);">Nov 2025</div>
-                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:56%; opacity:0.6;"></div></div>
-                        <div class="hbar-amount" style="color:var(--slate-500);">&euro;338,700</div>
-                    </div>
-                    <div class="hbar-row filterable-row" data-period="2025">
-                        <div class="hbar-label" style="color:var(--slate-500);">Dec 2025</div>
-                        <div class="hbar-track"><div class="hbar-fill bar-sales" style="width:67%; opacity:0.6;"></div></div>
-                        <div class="hbar-amount" style="color:var(--slate-500);">&euro;401,200</div>
-                    </div>
+                </div>
+
+                <!-- Monthly detail table -->
+                <div style="margin-top: 20px;">
+                    <table class="data-table" style="font-size:12px;">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th style="text-align:right;">Revenue</th>
+                                <th style="text-align:right;">Units</th>
+                                <th style="text-align:right;">Invoices</th>
+                                <th style="text-align:right;">Avg Price/Unit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>January</td>
+                                <td class="amount-cell">&euro;3,304,102</td>
+                                <td class="amount-cell">6,633</td>
+                                <td class="amount-cell">4,420</td>
+                                <td class="amount-cell">&euro;498</td>
+                            </tr>
+                            <tr>
+                                <td>February</td>
+                                <td class="amount-cell">&euro;3,048,177</td>
+                                <td class="amount-cell">6,415</td>
+                                <td class="amount-cell">3,046</td>
+                                <td class="amount-cell">&euro;475</td>
+                            </tr>
+                            <tr>
+                                <td>March</td>
+                                <td class="amount-cell">&euro;782,039</td>
+                                <td class="amount-cell">2,951</td>
+                                <td class="amount-cell">1,737</td>
+                                <td class="amount-cell">&euro;265</td>
+                            </tr>
+                            <tr style="color:var(--emerald-400);">
+                                <td>April (MTD)</td>
+                                <td class="amount-cell">&euro;1,073,286</td>
+                                <td class="amount-cell">1,631</td>
+                                <td class="amount-cell">551</td>
+                                <td class="amount-cell">&euro;658</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -1644,29 +1751,184 @@
             });
         });
 
+        // ── Monthly data from Odoo (posted invoices Jan–Apr 2026) ──
+        var monthlyData = {
+            '2026-01': { rev: 3304101.78, cogs: 1062952.78, units: 6633, invoices: 4420, topClient: 'Mytheresa', topClientVal: 35676.00, topProduct: 'Sima', topProductVal: 380210.86 },
+            '2026-02': { rev: 3048177.00, cogs: 1012505.69, units: 6415, invoices: 3046, topClient: 'Mytheresa', topClientVal: 359883.00, topProduct: 'Sima', topProductVal: 191720.99 },
+            '2026-03': { rev: 782038.89, cogs: 95132.46, units: 2951, invoices: 1737, topClient: 'Bloomingdales', topClientVal: 49950.32, topProduct: 'Pia', topProductVal: 165376.02 },
+            '2026-04': { rev: 1073286.22, cogs: 475909.32, units: 1631, invoices: 551, topClient: 'Charllene Amin', topClientVal: 51256.65, topProduct: 'Althea Ponyhair', topProductVal: 111823.93 }
+        };
+
+        var periodToMonths = {
+            'all':      ['2026-01','2026-02','2026-03','2026-04'],
+            '2026':     ['2026-01','2026-02','2026-03','2026-04'],
+            'q1-2026':  ['2026-01','2026-02','2026-03'],
+            'q2-2026':  ['2026-04'],
+            'jan-2026': ['2026-01'],
+            'feb-2026': ['2026-02'],
+            'mar-2026': ['2026-03'],
+            'apr-2026': ['2026-04']
+        };
+
+        function formatEuro(n) {
+            return '\u20AC' + Math.round(n).toLocaleString('en-US');
+        }
+
+        function getSelectedMonths(period) {
+            if (period === 'custom') {
+                var dateFrom = document.getElementById('filterDateFrom').value;
+                var dateTo = document.getElementById('filterDateTo').value;
+                var result = [];
+                Object.keys(monthlyData).forEach(function(m) {
+                    var parts = m.split('-');
+                    var y = parseInt(parts[0]), mo = parseInt(parts[1]);
+                    var mStart = m + '-01';
+                    var lastDay = new Date(y, mo, 0).getDate();
+                    var mEnd = m + '-' + (lastDay < 10 ? '0' : '') + lastDay;
+                    if (mEnd >= dateFrom && mStart <= dateTo) result.push(m);
+                });
+                return result;
+            }
+            return periodToMonths[period] || periodToMonths['all'];
+        }
+
+        function updateKpis(months) {
+            var totalRev = 0, totalCogs = 0, totalUnits = 0, totalInvoices = 0;
+            var bestClient = '', bestClientVal = 0;
+            var clientTotals = {};
+
+            months.forEach(function(m) {
+                var d = monthlyData[m];
+                if (!d) return;
+                totalRev += d.rev;
+                totalCogs += d.cogs;
+                totalUnits += d.units;
+                totalInvoices += d.invoices;
+                var cn = d.topClient;
+                if (!clientTotals[cn]) clientTotals[cn] = 0;
+                clientTotals[cn] += d.topClientVal;
+            });
+
+            // Find the top client across selected months
+            Object.keys(clientTotals).forEach(function(c) {
+                if (clientTotals[c] > bestClientVal) {
+                    bestClientVal = clientTotals[c];
+                    bestClient = c;
+                }
+            });
+
+            var margin = totalRev > 0 ? ((totalRev - totalCogs) / totalRev * 100) : 0;
+            var aov = totalInvoices > 0 ? totalRev / totalInvoices : 0;
+            var clientPct = totalRev > 0 ? (bestClientVal / totalRev * 100) : 0;
+
+            document.getElementById('kpiTotalSales').textContent = formatEuro(totalRev);
+            document.getElementById('kpiOrders').textContent = totalInvoices.toLocaleString('en-US');
+            document.getElementById('kpiAov').textContent = formatEuro(aov);
+            document.getElementById('kpiMargin').textContent = margin.toFixed(1) + '%';
+            document.getElementById('kpiTopClient').textContent = bestClient;
+
+            // Update sub-labels
+            var kpiCards = document.querySelectorAll('.sales-kpi');
+            if (kpiCards[1]) kpiCards[1].querySelector('.sales-kpi-sub').textContent = totalUnits.toLocaleString('en-US') + ' units sold';
+            if (kpiCards[3]) kpiCards[3].querySelector('.sales-kpi-sub').textContent = 'COGS ' + formatEuro(totalCogs);
+            if (kpiCards[4]) kpiCards[4].querySelector('.sales-kpi-sub').textContent = formatEuro(bestClientVal) + ' (' + clientPct.toFixed(1) + '%)';
+
+            // Update period label
+            var periodLabel = '';
+            var period = document.getElementById('filterPeriod').value;
+            if (period === 'all' || period === '2026') periodLabel = 'Jan \u2013 Apr 2026 (Odoo posted)';
+            else if (period === 'q1-2026') periodLabel = 'Q1 2026 (Odoo posted)';
+            else if (period === 'q2-2026') periodLabel = 'Q2 2026 (Odoo posted)';
+            else if (period === 'custom') periodLabel = document.getElementById('filterDateFrom').value + ' to ' + document.getElementById('filterDateTo').value;
+            else {
+                var monthNames = {'jan-2026':'January 2026','feb-2026':'February 2026','mar-2026':'March 2026','apr-2026':'April 2026'};
+                periodLabel = (monthNames[period] || '') + ' (Odoo posted)';
+            }
+            if (kpiCards[0]) kpiCards[0].querySelector('.sales-kpi-sub').textContent = periodLabel;
+        }
+
         // ── Sales Filter Logic ──
         function applyFilters() {
             var period = document.getElementById('filterPeriod').value;
             var client = document.getElementById('filterClient').value;
             var product = document.getElementById('filterProduct').value;
 
+            // Show/hide custom date row
+            var customRow = document.getElementById('customDateRow');
+            if (period === 'custom') {
+                customRow.classList.add('visible');
+            } else {
+                customRow.classList.remove('visible');
+            }
+
+            // Update KPIs based on selected period
+            var selectedMonths = getSelectedMonths(period);
+            updateKpis(selectedMonths);
+
             // Filter client bars
             document.querySelectorAll('#salesByClient .filterable-row').forEach(function(row) {
                 var show = (client === 'all' || row.getAttribute('data-client') === client);
-                row.classList.toggle('hidden', !show);
+                row.classList.toggle('filter-hidden', !show);
             });
 
             // Filter product bars
             document.querySelectorAll('#salesByProduct .filterable-row').forEach(function(row) {
                 var show = (product === 'all' || row.getAttribute('data-product') === product);
-                row.classList.toggle('hidden', !show);
+                row.classList.toggle('filter-hidden', !show);
             });
 
             // Filter monthly bars
             document.querySelectorAll('#salesByMonth .filterable-row').forEach(function(row) {
-                var periods = (row.getAttribute('data-period') || '').split(',');
-                var show = (period === 'all' || periods.indexOf(period) !== -1);
-                row.classList.toggle('hidden', !show);
+                var show = false;
+                if (period === 'all') {
+                    show = true;
+                } else if (period === 'custom') {
+                    var dateFrom = document.getElementById('filterDateFrom').value;
+                    var dateTo = document.getElementById('filterDateTo').value;
+                    var rowDate = row.getAttribute('data-date') || '';
+                    if (rowDate && dateFrom && dateTo) {
+                        var rowStart = rowDate + '-01';
+                        var rowEndParts = rowDate.split('-');
+                        var y = parseInt(rowEndParts[0]), m = parseInt(rowEndParts[1]);
+                        var lastDay = new Date(y, m, 0).getDate();
+                        var rowEnd = rowDate + '-' + (lastDay < 10 ? '0' : '') + lastDay;
+                        show = (rowEnd >= dateFrom && rowStart <= dateTo);
+                    }
+                } else {
+                    var periods = (row.getAttribute('data-period') || '').split(',');
+                    show = (periods.indexOf(period) !== -1);
+                }
+                row.classList.toggle('filter-hidden', !show);
+            });
+
+            // Filter monthly detail table rows too
+            var tableRows = document.querySelectorAll('#salesByMonth .data-table tbody tr');
+            var monthMap = {'January':'jan-2026','February':'feb-2026','March':'mar-2026','April (MTD)':'apr-2026'};
+            var monthDateMap = {'January':'2026-01','February':'2026-02','March':'2026-03','April (MTD)':'2026-04'};
+            var qMap = {'January':'q1-2026','February':'q1-2026','March':'q1-2026','April (MTD)':'q2-2026'};
+            tableRows.forEach(function(tr) {
+                var label = tr.cells[0] ? tr.cells[0].textContent.trim() : '';
+                var show = false;
+                if (period === 'all' || period === '2026') {
+                    show = true;
+                } else if (period === 'custom') {
+                    var dateFrom = document.getElementById('filterDateFrom').value;
+                    var dateTo = document.getElementById('filterDateTo').value;
+                    var rd = monthDateMap[label] || '';
+                    if (rd && dateFrom && dateTo) {
+                        var rs = rd + '-01';
+                        var mp = rd.split('-');
+                        var yy = parseInt(mp[0]), mm = parseInt(mp[1]);
+                        var ld = new Date(yy, mm, 0).getDate();
+                        var re = rd + '-' + (ld < 10 ? '0' : '') + ld;
+                        show = (re >= dateFrom && rs <= dateTo);
+                    }
+                } else {
+                    var mk = monthMap[label] || '';
+                    var qk = qMap[label] || '';
+                    show = (period === mk || period === qk);
+                }
+                tr.style.display = show ? '' : 'none';
             });
         }
 
@@ -1674,10 +1936,21 @@
             document.getElementById('filterPeriod').value = 'all';
             document.getElementById('filterClient').value = 'all';
             document.getElementById('filterProduct').value = 'all';
+            document.getElementById('filterDateFrom').value = '2026-01-01';
+            document.getElementById('filterDateTo').value = '2026-04-06';
+            document.getElementById('customDateRow').classList.remove('visible');
             document.querySelectorAll('.filterable-row').forEach(function(row) {
-                row.classList.remove('hidden');
+                row.classList.remove('filter-hidden');
+            });
+            document.querySelectorAll('#salesByMonth .data-table tbody tr').forEach(function(tr) {
+                tr.style.display = '';
             });
         }
+
+        // Apply filters on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            applyFilters();
+        });
     </script>
 </body>
 </html>
